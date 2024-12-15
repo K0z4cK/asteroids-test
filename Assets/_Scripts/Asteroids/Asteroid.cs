@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Asteroid : MonoBehaviour
+public abstract class Asteroid : MonoBehaviour
 {
     protected const string ProjectileTag = "Projectile";
     protected const string PlayerTag = "Player";
@@ -8,6 +8,7 @@ public class Asteroid : MonoBehaviour
     private Rigidbody2D _rigidbody;
 
     protected Vector2 _force;
+    public Vector2 Force => _force;
 
     private void Awake()
     {

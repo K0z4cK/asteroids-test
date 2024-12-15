@@ -1,8 +1,15 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 public class BigAsteroid : Asteroid
 {
-    [SerializeField] private SmallAsteroid _smallAsteroidPrefab;
+    private event UnityAction<bool, BigAsteroid> OnBigAsteroidDestory;
+
+    public void Init(Vector2 force, UnityAction<bool, BigAsteroid> onBigAsteroidDestory)
+    {
+        Init(force);
+        OnBigAsteroidDestory = onBigAsteroidDestory;
+    }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -10,20 +17,15 @@ public class BigAsteroid : Asteroid
         {
             ProjectilesController.instance.RemoveProjectile(collision.transform);
 
-            Vector2 dividedForce = _force / 2f;
-
-            var smallAsteroid = Instantiate(_smallAsteroidPrefab, transform.position, transform.rotation);
-            smallAsteroid.Init(dividedForce);
-
-            smallAsteroid = Instantiate(_smallAsteroidPrefab, transform.position, transform.rotation);
-            smallAsteroid.Init(-dividedForce);
-
+            OnBigAsteroidDestory?.Invoke(true, this);
             Destroy(gameObject);
         }
         else if (collision.CompareTag(PlayerTag))
         {
-            Destroy(gameObject);
             collision.GetComponent<Player>().GetHit();
+
+            OnBigAsteroidDestory?.Invoke(false, this);
+            Destroy(gameObject);          
         }
     }
 }

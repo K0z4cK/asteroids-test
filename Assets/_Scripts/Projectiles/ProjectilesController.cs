@@ -23,7 +23,13 @@ public class ProjectilesController : MonoBehaviour
         projectile.GetComponent<Rigidbody2D>().AddForce(force);
     }
 
-    public void RemoveProjectile(Transform projectile) => _projectilesPool.Release(projectile);
+    public void RemoveProjectile(Transform projectile)
+    {
+        if (projectile != null && projectile.gameObject.activeSelf)
+        {
+            _projectilesPool.Release(projectile);
+        }
+    }
 
     private Transform Create()
     {
